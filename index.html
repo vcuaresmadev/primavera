@@ -1,0 +1,549 @@
+<!-- index.html -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bienvenida a la Primavera 🌼 — Tarjetas</title>
+  <style>
+    :root{
+      --bg: linear-gradient(180deg,#fff8e6 0%, #f7fff0 100%);
+      --card: #ffffff;
+      --muted: #6b7280;
+      --accent: #f59e0b; /* amarillo cálido */
+      --glass: rgba(255,255,255,0.6);
+      --shadow: 0 6px 20px rgba(15,23,42,0.08);
+      --radius: 14px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:#0f172a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:28px;
+    }
+
+    .container{
+      width:100%;
+      max-width:980px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));
+      border-radius:20px;
+      padding:20px;
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(6px) saturate(120%);
+      border: 1px solid rgba(250,250,250,0.6);
+    }
+
+    header{
+      display:flex;
+      gap:16px;
+      align-items:center;
+    }
+    .logo{
+      width:86px;
+      height:86px;
+      border-radius:16px;
+      background:linear-gradient(135deg,#fff3d7,#fff9e6);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:36px;
+      box-shadow: 0 6px 18px rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.12);
+    }
+    h1{margin:0;font-size:20px}
+    p.lead{margin:6px 0 0;color:var(--muted)}
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 380px;
+      gap:20px;
+      margin-top:18px;
+    }
+
+    /* Form */
+    form.card-form{
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8));
+      padding:14px;
+      border-radius:12px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(0,0,0,0.03);
+    }
+    label{display:block;margin-bottom:6px;font-size:13px;color:#334155}
+    input[type="text"], textarea, select {
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid #e6e9ef;
+      background:transparent;
+      font-size:14px;
+      resize:vertical;
+    }
+    textarea{min-height:90px}
+    .row{display:flex;gap:8px;align-items:center}
+    .colors{display:flex;gap:8px;margin:8px 0 12px}
+    .color-swatch{width:34px;height:34px;border-radius:8px;cursor:pointer;border:2px solid transparent;box-shadow: 0 4px 8px rgba(15,23,42,0.04)}
+    .color-swatch.selected{outline:3px solid rgba(0,0,0,0.06);transform:translateY(-2px)}
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:12px;
+      cursor:pointer;
+      border:0;
+      font-weight:600;
+    }
+    .btn-primary{background:var(--accent); color:#07203b; box-shadow: 0 8px 18px rgba(245,158,11,0.12)}
+    .btn-ghost{background:transparent;border:1px solid rgba(10,10,10,0.06)}
+    .small{font-size:13px;padding:8px 10px;border-radius:10px}
+
+    /* Cards area */
+    .cards-area{
+      background:transparent;
+      padding:10px;
+      border-radius:12px;
+      min-height:320px;
+    }
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+      gap:14px;
+    }
+    .card{
+      background:var(--card);
+      padding:12px;
+      border-radius:12px;
+      box-shadow: 0 6px 14px rgba(12,18,30,0.06);
+      position:relative;
+      overflow:hidden;
+      border-left:8px solid var(--accent);
+    }
+    .card .title{font-weight:700;margin:0 0 6px}
+    .card .body{margin:0;color:#475569;font-size:14px;white-space:pre-wrap}
+    .card .meta{font-size:12px;color:var(--muted);margin-top:8px}
+    .card .actions{
+      position:absolute;
+      top:8px; right:8px;
+      display:flex; gap:6px;
+    }
+    .action-btn{background:rgba(255,255,255,0.7);border:0;padding:6px;border-radius:8px;cursor:pointer}
+    .empty{
+      text-align:center;color:var(--muted);
+      padding:40px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.6),transparent);
+    }
+
+    /* Responsive */
+    @media (max-width:900px){
+      .grid{grid-template-columns:1fr; padding-bottom:8px}
+      .logo{width:68px;height:68px;font-size:28px}
+    }
+
+    footer{margin-top:14px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
+    a.link{color:#0f172a;text-decoration:underline;font-weight:600}
+    .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;background:#0f172a;color:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 6px 18px rgba(2,6,23,0.35);display:none}
+    .show{display:block}
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <header>
+      <div class="logo" aria-hidden="true">🌼</div>
+      <div>
+        <h1>¡Feliz inicio de la primavera! 🌱</h1>
+        <p class="lead">Vi flores amarillas y sentí que hacía falta que alguien te enviara una tarjeta bonita. Crea, guarda y comparte tarjetas con mensajes cálidos.</p>
+      </div>
+    </header>
+
+    <div class="grid" style="margin-top:18px">
+      <!-- Left: Cards display -->
+      <section class="cards-area" aria-label="Tarjetas">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong>Tus tarjetas</strong>
+          <div style="display:flex;gap:8px">
+            <button id="exportBtn" class="btn small btn-ghost" title="Exportar">Exportar</button>
+            <button id="importBtn" class="btn small btn-ghost" title="Importar">Importar</button>
+            <button id="clearBtn" class="btn small btn-ghost" title="Eliminar todo">Eliminar</button>
+          </div>
+        </div>
+
+        <div id="cards" class="cards"></div>
+
+        <div id="empty" class="empty" style="display:none">
+          <div style="font-size:28px">✨</div>
+          <div style="margin-top:8px">Aún no hay tarjetas. Crea la primera en el formulario a la derecha.</div>
+        </div>
+      </section>
+
+      <!-- Right: Form -->
+      <aside>
+        <form id="form" class="card-form" autocomplete="off" onsubmit="return false;">
+          <label for="title">Título</label>
+          <input id="title" type="text" placeholder="Para alguien especial" maxlength="60" required />
+
+          <label for="message" style="margin-top:8px">Mensaje</label>
+          <textarea id="message" placeholder="Escribe algo bonito... (máx 400 caracteres)" maxlength="400" required></textarea>
+
+          <label style="margin-top:8px">Color de tarjeta</label>
+          <div class="colors" id="colorList" aria-hidden="false">
+            <!-- color swatches populated by JS -->
+          </div>
+
+          <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+            <button id="saveBtn" class="btn btn-primary">Crear tarjeta</button>
+            <button id="previewBtn" class="btn btn-ghost" title="Previsualizar">Previsualizar</button>
+          </div>
+
+          <hr style="margin:12px 0;border:none;border-top:1px solid rgba(0,0,0,0.05)">
+
+          <label style="font-size:13px;color:var(--muted)">Sincronizar con la nube (opcional)</label>
+          <input id="apiUrl" type="text" placeholder="https://mi-api.com/tarjetas (opcional)" />
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button id="syncBtn" class="btn small btn-primary">Guardar en la nube</button>
+            <button id="syncTestBtn" class="btn small btn-ghost">Probar endpoint</button>
+          </div>
+
+        </form>
+      </aside>
+    </div>
+
+    <footer>
+      <div>Hecho con cariño 🌼 · <span id="count">0</span> tarjetas</div>
+      <div>Consejo: si quieres enviar una tarjeta a alguien, exporta y comparte el archivo JSON.</div>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function(){
+      // --- Config / Estado ---
+      const STORAGE_KEY = 'spring_cards_v1';
+      const colors = [
+        {name:'Amarillo', val:'#FFF9C4'},
+        {name:'Durazno', val:'#FFE5D4'},
+        {name:'Menta', val:'#E6FFFA'},
+        {name:'Lavanda', val:'#F3E8FF'},
+        {name:'Azul Cielo', val:'#E8F8FF'},
+        {name:'Blanco', val:'#FFFFFF'}
+      ];
+
+      // Elements
+      const el = id => document.getElementById(id);
+      const cardsEl = el('cards');
+      const emptyEl = el('empty');
+      const titleInput = el('title');
+      const msgInput = el('message');
+      const saveBtn = el('saveBtn');
+      const previewBtn = el('previewBtn');
+      const apiUrlInput = el('apiUrl');
+      const syncBtn = el('syncBtn');
+      const syncTestBtn = el('syncTestBtn');
+      const exportBtn = el('exportBtn');
+      const importBtn = el('importBtn');
+      const clearBtn = el('clearBtn');
+      const toast = el('toast');
+      const countEl = el('count');
+      const colorList = el('colorList');
+
+      let selectedColor = colors[0].val;
+      let cards = [];
+
+      // --- Helpers ---
+      function showToast(text, time=2200){
+        toast.textContent = text;
+        toast.classList.add('show');
+        setTimeout(()=> toast.classList.remove('show'), time);
+      }
+      function saveStorage(){
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+        render();
+      }
+      function loadStorage(){
+        try{
+          const raw = localStorage.getItem(STORAGE_KEY);
+          cards = raw ? JSON.parse(raw) : [];
+        }catch(e){ cards = [] }
+      }
+      function uid(){
+        return 'c_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);
+      }
+      function formatDate(ts){
+        const d = new Date(ts);
+        return d.toLocaleString();
+      }
+
+      // --- Render functions ---
+      function renderColors(){
+        colorList.innerHTML = '';
+        colors.forEach(c=>{
+          const btn = document.createElement('div');
+          btn.className = 'color-swatch' + (c.val===selectedColor ? ' selected' : '');
+          btn.style.background = c.val;
+          btn.title = c.name;
+          btn.addEventListener('click', ()=>{
+            selectedColor = c.val;
+            renderColors();
+          });
+          colorList.appendChild(btn);
+        });
+      }
+
+      function render(){
+        cardsEl.innerHTML = '';
+        if(!cards.length){
+          emptyEl.style.display = 'block';
+        } else {
+          emptyEl.style.display = 'none';
+          cards.forEach(item=>{
+            const node = document.createElement('article');
+            node.className = 'card';
+            node.style.borderLeftColor = item.color || '#f59e0b';
+            node.innerHTML = `
+              <div class="actions">
+                <button class="action-btn" data-action="share" title="Compartir">🔗</button>
+                <button class="action-btn" data-action="edit" title="Editar">✏️</button>
+                <button class="action-btn" data-action="delete" title="Eliminar">🗑️</button>
+              </div>
+              <h3 class="title">${escapeHtml(item.title)}</h3>
+              <div class="body">${escapeHtml(item.message)}</div>
+              <div class="meta">Creada: ${formatDate(item.createdAt)}</div>
+            `;
+            // actions
+            node.querySelectorAll('.action-btn').forEach(b=>{
+              b.addEventListener('click', (ev)=>{
+                const a = b.getAttribute('data-action');
+                if(a==='delete') { deleteCard(item.id) }
+                else if(a==='edit') { loadIntoForm(item) }
+                else if(a==='share') { shareCard(item) }
+              });
+            });
+            cardsEl.appendChild(node);
+          });
+        }
+        countEl.textContent = cards.length;
+      }
+
+      // --- Card operations ---
+      function createCard(title, message, color){
+        const card = {
+          id: uid(),
+          title: title.trim(),
+          message: message.trim(),
+          color: color || selectedColor,
+          createdAt: Date.now()
+        };
+        cards.unshift(card);
+        saveStorage();
+        showToast('Tarjeta creada 🌼');
+        resetForm();
+      }
+
+      function deleteCard(id){
+        if(!confirm('¿Eliminar esta tarjeta?')) return;
+        cards = cards.filter(c => c.id !== id);
+        saveStorage();
+        showToast('Tarjeta eliminada');
+      }
+
+      function loadIntoForm(item){
+        titleInput.value = item.title;
+        msgInput.value = item.message;
+        selectedColor = item.color || selectedColor;
+        renderColors();
+        showToast('Edita el contenido y presiona "Crear tarjeta" para guardar como nueva.');
+        window.scrollTo({top:0,behavior:'smooth'});
+      }
+
+      function shareCard(item){
+        // crear archivo JSON y descargar
+        const blob = new Blob([JSON.stringify(item,null,2)], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `tarjeta-${item.id}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast('Archivo JSON descargado ✅');
+      }
+
+      function resetForm(){
+        titleInput.value = '';
+        msgInput.value = '';
+        selectedColor = colors[0].val;
+        renderColors();
+      }
+
+      // --- Export / Import ---
+      function exportAll(){
+        const blob = new Blob([JSON.stringify(cards,null,2)], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `tarjetas-primavera.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast('Exportado ✅');
+      }
+
+      function importAll(){
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json,application/json';
+        input.onchange = e => {
+          const file = e.target.files[0];
+          if(!file) return;
+          const reader = new FileReader();
+          reader.onload = ev => {
+            try{
+              const arr = JSON.parse(ev.target.result);
+              if(Array.isArray(arr)){
+                // merge keeping ids unique
+                const existingIds = new Set(cards.map(c=>c.id));
+                let added = 0;
+                arr.forEach(it=>{
+                  if(it && it.id && !existingIds.has(it.id)){
+                    cards.push(it); added++;
+                  }
+                });
+                saveStorage();
+                showToast(`Importadas ${added} tarjetas`);
+              } else if(arr && arr.id){
+                // single card object
+                if(!cards.find(c=>c.id===arr.id)) cards.unshift(arr);
+                saveStorage();
+                showToast('Tarjeta importada ✅');
+              } else {
+                showToast('Formato JSON no válido',2500);
+              }
+            }catch(err){
+              showToast('Error leyendo el archivo',2500);
+            }
+          };
+          reader.readAsText(file);
+        };
+        input.click();
+      }
+
+      // --- Sync to cloud (optional) ---
+      async function syncToCloud(){
+        const url = apiUrlInput.value.trim();
+        if(!url){ showToast('Ingrese la URL del endpoint primero (opcional)'); return; }
+        try{
+          // Enviar todas las tarjetas (ejemplo POST). Ajusta según tu API.
+          const resp = await fetch(url, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({cards})
+          });
+          if(!resp.ok) throw new Error('Respuesta no OK: ' + resp.status);
+          showToast('Sincronizado con la nube ✅');
+        }catch(err){
+          showToast('Error al sincronizar: ' + (err.message||err), 3500);
+        }
+      }
+
+      async function testEndpoint(){
+        const url = apiUrlInput.value.trim();
+        if(!url){ showToast('Ingrese la URL del endpoint primero (opcional)'); return; }
+        try{
+          const resp = await fetch(url, {method:'OPTIONS'});
+          if(resp.ok) showToast('Endpoint accesible (OPTIONS OK)');
+          else showToast('Endpoint respondió: ' + resp.status,3000);
+        }catch(e){
+          showToast('No se pudo contactar el endpoint',3000);
+        }
+      }
+
+      // --- Utilities ---
+      function escapeHtml(s){
+        if(!s) return '';
+        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      }
+
+      // --- Events ---
+      saveBtn.addEventListener('click', ()=>{
+        const t = titleInput.value.trim();
+        const m = msgInput.value.trim();
+        if(!t || !m){ showToast('Rellena título y mensaje',1800); return; }
+        createCard(t,m,selectedColor);
+      });
+      previewBtn.addEventListener('click', ()=>{
+        const t = titleInput.value.trim();
+        const m = msgInput.value.trim();
+        if(!t && !m){ showToast('Escribe algo para previsualizar',1600); return; }
+        // crear temporal
+        const tmp = {id:'tmp', title: t || '(sin título)', message: m || '(sin mensaje)', color: selectedColor, createdAt: Date.now()};
+        const old = cardsEl.innerHTML;
+        // render solo temporal al inicio
+        cardsEl.innerHTML = '';
+        const node = document.createElement('article');
+        node.className = 'card';
+        node.style.borderLeftColor = tmp.color;
+        node.innerHTML = `
+          <div style="position:absolute;right:8px;top:8px;font-size:12px;color:var(--muted)">Vista previa</div>
+          <h3 class="title">${escapeHtml(tmp.title)}</h3>
+          <div class="body">${escapeHtml(tmp.message)}</div>
+        `;
+        cardsEl.prepend(node);
+        setTimeout(()=> render(), 2200);
+      });
+
+      clearBtn.addEventListener('click', ()=>{
+        if(!confirm('¿Borrar todas las tarjetas guardadas en este dispositivo?')) return;
+        cards = [];
+        saveStorage();
+        showToast('Todo borrado');
+      });
+
+      exportBtn.addEventListener('click', exportAll);
+      importBtn.addEventListener('click', importAll);
+
+      syncBtn.addEventListener('click', syncToCloud);
+      syncTestBtn.addEventListener('click', testEndpoint);
+
+      // keyboard: ctrl+enter create
+      msgInput.addEventListener('keydown', (e)=>{
+        if(e.ctrlKey && e.key==='Enter'){ saveBtn.click(); }
+      });
+
+      // --- Init ---
+      loadStorage();
+      renderColors();
+      render();
+
+      // Accessibility: focus first input
+      titleInput.focus();
+
+      // --- NOTES for cloud integration ---
+      /* 
+        Si tienes una API en la nube para guardar tarjetas, configura:
+        - método: POST
+        - body: JSON con la estructura { cards: [ ... ] } o como lo requiera tu API
+        - cabeceras: Content-Type: application/json
+
+        Ejemplo (descomentarlo y ajustar):
+        async function uploadSingle(card){
+          await fetch('https://miapi.com/tarjetas', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(card)
+          });
+        }
+      */
+
+    })();
+  </script>
+</body>
+</html>
